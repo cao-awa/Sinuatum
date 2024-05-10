@@ -7,6 +7,7 @@ import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Manipulate<I, T> {
     private ExceptingFunction<I, T, Throwable> action;
@@ -134,6 +135,32 @@ public class Manipulate<I, T> {
         }
 
         return null;
+    }
+
+    public T get(Supplier<T> creator) {
+        try {
+            return this.action.apply(null);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+        }
+
+        return creator.get();
+    }
+
+    public T get(T defaultValue) {
+        try {
+            return this.action.apply(null);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+        }
+
+        return defaultValue;
     }
 
     public T operate(I input) {
