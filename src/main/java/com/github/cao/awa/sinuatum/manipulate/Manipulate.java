@@ -42,6 +42,15 @@ public class Manipulate<I, T> {
         });
     }
 
+    public static <X> void notNull(X target, ExceptingConsumer<X, Throwable> consumer) {
+        new Manipulate<>((X i) -> {
+            if (i != null) {
+                consumer.accept(i);
+            }
+            return null;
+        }).operate(target);
+    }
+
     public static <X, Y> Manipulate<X, Y> notNull(ExceptingFunction<X, Y, Throwable> consumer) {
         return new Manipulate<>((i) -> {
             if (i != null) {
@@ -58,6 +67,15 @@ public class Manipulate<I, T> {
             }
             return null;
         });
+    }
+
+    public static <X> void nulls(X target, ExceptingRunnable<Throwable> consumer) {
+        new Manipulate<>((X i) -> {
+            if (i == null) {
+                consumer.run();
+            }
+            return null;
+        }).operate(target);
     }
 
     public static <Y> Manipulate<?, Y> nulls(ExceptingSupplier<Y, Throwable> consumer) {
