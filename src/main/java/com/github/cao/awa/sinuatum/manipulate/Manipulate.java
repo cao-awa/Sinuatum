@@ -1,5 +1,6 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
+import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
 import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingFunction;
 import com.github.cao.awa.sinuatum.function.ecception.runnable.ExceptingRunnable;
 import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier;
@@ -30,6 +31,50 @@ public class Manipulate<I, T> {
 
     public static <X, Y> Manipulate<X, Y> make(ExceptingFunction<X, Y, Throwable> function) {
         return new Manipulate<>(function);
+    }
+
+    public static <X> Manipulate<X, ?> notNull(ExceptingConsumer<X, Throwable> consumer) {
+        return new Manipulate<>((i) -> {
+            if (i != null) {
+                consumer.accept(i);
+            }
+            return null;
+        });
+    }
+
+    public static <X, Y> Manipulate<X, Y> notNull(ExceptingFunction<X, Y, Throwable> consumer) {
+        return new Manipulate<>((i) -> {
+            if (i != null) {
+                return consumer.apply(i);
+            }
+            return null;
+        });
+    }
+
+    public static Manipulate<?, ?> nulls(ExceptingRunnable<Throwable> consumer) {
+        return new Manipulate<>((i) -> {
+            if (i == null) {
+                consumer.run();
+            }
+            return null;
+        });
+    }
+
+    public static <Y> Manipulate<?, Y> nulls(ExceptingSupplier<Y, Throwable> consumer) {
+        return new Manipulate<>((i) -> {
+            if (i != null) {
+                return consumer.get();
+            }
+            return null;
+        });
+    }
+
+    public static <X> X operation(X target, ExceptingConsumer<X, Throwable> action) {
+        new Manipulate<>((X i) -> {
+            action.accept(i);
+            return null;
+        }).operate(target);
+        return target;
     }
 
     public <E extends Throwable> Manipulate<I, T> catching(Class<E> target, Consumer<E> handler) {
