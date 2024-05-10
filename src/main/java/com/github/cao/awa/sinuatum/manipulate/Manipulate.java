@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 public class Manipulate<I, T> {
     private ExceptingFunction<I, T, Throwable> action;
     private Map<Class<? extends Throwable>, Consumer<? extends Throwable>> exceptionHandlers = new HashMap<>();
+    private Consumer<Throwable> genericHandler;
 
     public Manipulate(ExceptingFunction<I, T, Throwable> action) {
         this.action = action;
@@ -100,6 +101,11 @@ public class Manipulate<I, T> {
         return this;
     }
 
+    public Manipulate<I, T> catching(Consumer<Throwable> handler) {
+        this.genericHandler = handler;
+        return this;
+    }
+
     public static <E extends Throwable, R extends Throwable> void reThrow(ExceptingRunnable<E> runnable, Class<E> specifiedType, Function<E, R> makeException, Function<Throwable, R> whenOther) throws R {
         new Manipulate<>((i) -> {
             runnable.run();
@@ -184,6 +190,9 @@ public class Manipulate<I, T> {
             if (handler != null) {
                 handler.accept(cast(throwable));
             }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
         }
     }
 
@@ -194,6 +203,9 @@ public class Manipulate<I, T> {
             Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
             if (handler != null) {
                 handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
             }
         }
 
@@ -208,6 +220,9 @@ public class Manipulate<I, T> {
             if (handler != null) {
                 handler.accept(cast(throwable));
             }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
         }
 
         return creator.get();
@@ -221,6 +236,9 @@ public class Manipulate<I, T> {
             if (handler != null) {
                 handler.accept(cast(throwable));
             }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
         }
 
         return defaultValue;
@@ -233,6 +251,9 @@ public class Manipulate<I, T> {
             Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
             if (handler != null) {
                 handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
             }
         }
 
