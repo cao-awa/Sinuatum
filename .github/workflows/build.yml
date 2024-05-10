@@ -42,5 +42,5 @@ jobs:
       - name: publish to package
         run: ./gradlew publish
         env:
-          GH_ACTOR: 'cao-awa'
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_ACTOR: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
