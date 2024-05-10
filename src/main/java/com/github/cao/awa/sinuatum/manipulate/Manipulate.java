@@ -28,8 +28,8 @@ public class Manipulate<I, T> {
         return new Manipulate<>((i) -> supplier.get());
     }
 
-    public static <X, Y> Manipulate<X, Y> get(ExceptingFunction<X, Y, Throwable> supplier) {
-        return new Manipulate<>(supplier);
+    public static <X, Y> Manipulate<X, Y> make(ExceptingFunction<X, Y, Throwable> function) {
+        return new Manipulate<>(function);
     }
 
     public <E extends Throwable> Manipulate<I, T> catching(Class<E> target, Consumer<E> handler) {
