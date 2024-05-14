@@ -26,7 +26,7 @@ public class Manipulate<I, T> {
         });
     }
 
-    public static <X> Manipulate<?, X> make(ExceptingSupplier<X, Throwable> supplier) {
+    public static <X> Manipulate<?, X> supply(ExceptingSupplier<X, Throwable> supplier) {
         return new Manipulate<>((i) -> supplier.get());
     }
 
