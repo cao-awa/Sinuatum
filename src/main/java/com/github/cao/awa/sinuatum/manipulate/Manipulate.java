@@ -6,6 +6,7 @@ import com.github.cao.awa.sinuatum.function.ecception.runnable.ExceptingRunnable
 import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -34,28 +35,37 @@ public class Manipulate<I, T> {
         return new Manipulate<>(function);
     }
 
-    public static <X> Manipulate<X, ?> notNull(ExceptingConsumer<X, Throwable> consumer) {
-        return new Manipulate<>((i) -> {
-            if (i != null) {
-                consumer.accept(i);
-            }
-            return null;
-        });
-    }
-
     public static <X> void notNull(X target, ExceptingConsumer<X, Throwable> consumer) {
-        new Manipulate<>((X i) -> {
-            if (i != null) {
-                consumer.accept(i);
+        new Manipulate<>((X x) -> {
+            if (x != null) {
+                consumer.accept(x);
             }
             return null;
         }).operate(target);
     }
 
-    public static <X, Y> Manipulate<X, Y> notNull(ExceptingFunction<X, Y, Throwable> consumer) {
-        return new Manipulate<>((i) -> {
-            if (i != null) {
-                return consumer.apply(i);
+    public static <X, Y> Y supplyWhenNotNull(X target, ExceptingFunction<X, Y, Throwable> creator) {
+        return new Manipulate<>((X x) -> {
+            if (x != null) {
+                return creator.apply(x);
+            }
+            return null;
+        }).operate(target);
+    }
+
+    public static <X> Manipulate<X, ?> notNull(ExceptingConsumer<X, Throwable> consumer) {
+        return new Manipulate<>((x) -> {
+            if (x != null) {
+                consumer.accept(x);
+            }
+            return null;
+        });
+    }
+
+    public static <X, Y> Manipulate<X, Y> supplyWhenNotNull(ExceptingFunction<X, Y, Throwable> consumer) {
+        return new Manipulate<>((x) -> {
+            if (x != null) {
+                return consumer.apply(x);
             }
             return null;
         });
@@ -212,7 +222,42 @@ public class Manipulate<I, T> {
         return null;
     }
 
-    public T get(Supplier<T> creator) {
+    public T get(Consumer<Throwable> exceptionHandler) {
+        try {
+            return this.action.apply(null);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+            exceptionHandler.accept(throwable);
+        }
+
+        return null;
+    }
+
+    public <E extends Throwable> T get(Class<E> targetException, Consumer<E> exceptionHandler) {
+        try {
+            return this.action.apply(null);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+            E castedEx = cast(throwable);
+            notNull(castedEx, exceptionHandler::accept);
+        }
+
+        return null;
+    }
+
+    public T getOrCreate(Supplier<T> creator) {
         try {
             return this.action.apply(null);
         } catch (Throwable throwable) {
@@ -226,6 +271,38 @@ public class Manipulate<I, T> {
         }
 
         return creator.get();
+    }
+
+    public T getOrCreate(Function<Throwable, T> creator) {
+        try {
+            return this.action.apply(null);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+
+            return creator.apply(throwable);
+        }
+    }
+
+    public <E extends Throwable> T getOrCreate(Class<E> targetException, Function<E, T> creator) {
+        try {
+            return this.action.apply(null);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+
+            return creator.apply(cast(throwable));
+        }
     }
 
     public T getOrDefault(T defaultValue) {
@@ -260,8 +337,92 @@ public class Manipulate<I, T> {
         return null;
     }
 
+    public T operate(I input, BiFunction<Throwable, I, T> exceptionHandler) {
+        try {
+            return this.action.apply(input);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+
+            return exceptionHandler.apply(throwable, input);
+        }
+    }
+
+    public <E extends Throwable> T operate(I input, Class<E> targetException, BiFunction<E, I, T> exceptionHandler) {
+        try {
+            return this.action.apply(input);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+            E castedEx = cast(throwable);
+            return supplyWhenNotNull(castedEx, ex -> exceptionHandler.apply(ex, input));
+        }
+    }
+
+    public T operateOrCreate(I input, Function<I, T> creator) {
+        try {
+            return this.action.apply(input);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+
+            return creator.apply(input);
+        }
+    }
+
+    public <E extends Throwable> T operateOrCreate(I input, Class<E> targetException, BiFunction<E, I, T> creator) {
+        try {
+            return this.action.apply(input);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+            E castedEx = cast(throwable);
+            return supplyWhenNotNull(castedEx, ex -> creator.apply(ex, input));
+        }
+    }
+
+    public T operateOrDefault(I input, T defaultValue) {
+        try {
+            return this.action.apply(input);
+        } catch (Throwable throwable) {
+            Consumer<? extends Throwable> handler = this.exceptionHandlers.get(throwable.getClass());
+            if (handler != null) {
+                handler.accept(cast(throwable));
+            }
+            if (this.genericHandler != null) {
+                this.genericHandler.accept(throwable);
+            }
+        }
+
+        return defaultValue;
+    }
+
     @SuppressWarnings("unchecked")
     public static <R> R cast(Object object) {
-        return (R) object;
+        try {
+            return (R) object;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 }
