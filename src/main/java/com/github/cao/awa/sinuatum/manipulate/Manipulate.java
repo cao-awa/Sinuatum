@@ -228,7 +228,7 @@ public class Manipulate<I, T> {
         return creator.get();
     }
 
-    public T get(T defaultValue) {
+    public T getOrDefault(T defaultValue) {
         try {
             return this.action.apply(null);
         } catch (Throwable throwable) {
