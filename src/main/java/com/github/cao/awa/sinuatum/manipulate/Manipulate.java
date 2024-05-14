@@ -19,14 +19,14 @@ public class Manipulate<I, T> {
         this.action = action;
     }
 
-    public static Manipulate<?, ?> trys(ExceptingRunnable<Throwable> action) {
+    public static Manipulate<?, ?> action(ExceptingRunnable<Throwable> action) {
         return new Manipulate<>((i) -> {
             action.run();
             return null;
         });
     }
 
-    public static <X> Manipulate<?, X> get(ExceptingSupplier<X, Throwable> supplier) {
+    public static <X> Manipulate<?, X> make(ExceptingSupplier<X, Throwable> supplier) {
         return new Manipulate<>((i) -> supplier.get());
     }
 
