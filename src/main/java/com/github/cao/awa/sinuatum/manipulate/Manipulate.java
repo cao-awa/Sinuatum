@@ -222,7 +222,7 @@ public class Manipulate<I, T> {
         return null;
     }
 
-    public T get(Consumer<Throwable> exceptionHandler) {
+    public T get(Function<Throwable, T> exceptionHandler) {
         try {
             return this.action.apply(null);
         } catch (Throwable throwable) {
@@ -233,13 +233,11 @@ public class Manipulate<I, T> {
             if (this.genericHandler != null) {
                 this.genericHandler.accept(throwable);
             }
-            exceptionHandler.accept(throwable);
+            return exceptionHandler.apply(throwable);
         }
-
-        return null;
     }
 
-    public <E extends Throwable> T get(Class<E> targetException, Consumer<E> exceptionHandler) {
+    public <E extends Throwable> T get(Class<E> targetException, Function<E, T> exceptionHandler) {
         try {
             return this.action.apply(null);
         } catch (Throwable throwable) {
@@ -251,10 +249,8 @@ public class Manipulate<I, T> {
                 this.genericHandler.accept(throwable);
             }
             E castedEx = cast(throwable);
-            notNull(castedEx, exceptionHandler::accept);
+            return supplyWhenNotNull(castedEx, exceptionHandler::apply);
         }
-
-        return null;
     }
 
     public T getOrCreate(Supplier<T> creator) {
