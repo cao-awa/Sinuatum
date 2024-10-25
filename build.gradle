@@ -10,7 +10,7 @@ publishing {
             url = uri("https://maven.pkg.github.com/cao-awa/Sinuatum")
             credentials {
                 username = System.getenv("GH_ACTOR")
-                password = System.getenv("GH_TOKEN")
+                password = System.getenv("PUBLISH_TOKEN")
             }
         }
     }
