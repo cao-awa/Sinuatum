@@ -1,5 +1,6 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
+import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
 import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingBiFunction;
 import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingFunction;
 import com.github.cao.awa.sinuatum.function.ecception.runnable.ExceptingRunnable;
@@ -54,6 +55,19 @@ public abstract class Manipulate<M> {
 
     public static <R> SupplyManipulate<R> supplyLater(ExceptingSupplier<R, Throwable> supplier) {
         return new SupplyManipulate<>(supplier);
+    }
+
+    public static <I> I make(I input, ExceptingConsumer<I, Throwable> function) {
+        try {
+            function.accept(input);
+        } catch (Throwable ignored) {
+
+        }
+        return input;
+    }
+
+    public static <I> MakeManipulate<I> makeLater(ExceptingConsumer<I, Throwable> function){
+        return new MakeManipulate<>(function);
     }
 
     public static <P1, R> R op(P1 p1, ExceptingFunction<P1, R, Throwable> function) {
