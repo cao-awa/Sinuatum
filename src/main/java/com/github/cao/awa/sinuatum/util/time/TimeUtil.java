@@ -1,7 +1,5 @@
 package com.github.cao.awa.sinuatum.util.time;
 
-import com.github.cao.awa.sinuatum.manipulate.Manipulate;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

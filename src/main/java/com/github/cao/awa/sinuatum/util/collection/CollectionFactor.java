@@ -42,11 +42,15 @@ public class CollectionFactor {
         return Collections.synchronizedList(arrayList());
     }
 
+    public static <V> List<V> syncList(V... values) {
+        return Collections.synchronizedList(arrayList(values));
+    }
+
     public static <V> List<V> syncList(int capacity) {
         return Collections.synchronizedList(arrayList(capacity));
     }
 
-    public static <V> List<V> syncList(List<V> delegate) {
+    public static <V> List<V> syncList(Collection<V> delegate) {
         return Collections.synchronizedList(arrayList(delegate));
     }
 
@@ -55,12 +59,17 @@ public class CollectionFactor {
         //        return new ObjectArrayList<>();
     }
 
+    public static <V> ArrayList<V> arrayList(V... values) {
+        return new ArrayList<>(List.of(values));
+        //        return new ObjectArrayList<>(capacity);
+    }
+
     public static <V> ArrayList<V> arrayList(int capacity) {
         return new ArrayList<>(capacity);
         //        return new ObjectArrayList<>(capacity);
     }
 
-    public static <V> ArrayList<V> arrayList(List<V> delegate) {
+    public static <V> ArrayList<V> arrayList(Collection<V> delegate) {
         return new ArrayList<>(delegate);
         //        return new ObjectArrayList<>(delegate);
     }
@@ -69,8 +78,26 @@ public class CollectionFactor {
         return new LinkedList<>();
     }
 
+    public static <V> LinkedList<V> linkedList(V...values) {
+        return new LinkedList<>(List.of(values));
+    }
+
+    public static <V> LinkedList<V> linkedList(Collection<V> delegate) {
+        return new LinkedList<>(delegate);
+    }
+
     public static <V> HashSet<V> hashSet() {
         return new HashSet<>();
+        //         return new ObjectOpenHashSet<>();
+    }
+
+    public static <V> HashSet<V> hashSet(V...values) {
+        return new HashSet<>(List.of(values));
+        //         return new ObjectOpenHashSet<>();
+    }
+
+    public static <V> HashSet<V> hashSet(Collection<V> delegate) {
+        return new HashSet<>(delegate);
         //         return new ObjectOpenHashSet<>();
     }
 }
