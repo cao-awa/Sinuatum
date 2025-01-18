@@ -70,6 +70,28 @@ public abstract class Manipulate<M> {
         return new MakeManipulate<>(function);
     }
 
+    public static <I> I makeNonNull(I input, ExceptingConsumer<I, Throwable> function) {
+        try {
+            if (input == null) {
+                return null;
+            }
+            function.accept(input);
+        } catch (Throwable ignored) {
+
+        }
+        return input;
+    }
+
+    public static <I> MakeManipulate<I> makeNonNullLater(ExceptingConsumer<I, Throwable> function){
+        return new MakeManipulate<>(p1 -> {
+            if (p1 == null) {
+                return;
+            }
+            function.accept(p1);
+        });
+    }
+
+
     public static <P1, R> R op(P1 p1, ExceptingFunction<P1, R, Throwable> function) {
         try {
             return function.apply(p1);
@@ -94,7 +116,7 @@ public abstract class Manipulate<M> {
     }
 
     public static <P1, R> Op1Manipulate<P1, R> opNonNullLater(ExceptingFunction<P1, R, Throwable> function){
-        return new Op1Manipulate<>((p1) -> {
+        return new Op1Manipulate<>(p1 -> {
             if (p1 == null) {
                 return null;
             }
