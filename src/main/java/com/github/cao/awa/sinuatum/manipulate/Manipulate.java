@@ -82,6 +82,26 @@ public abstract class Manipulate<M> {
         return new Op1Manipulate<>(function);
     }
 
+    public static <P1, R> R opNonNull(P1 p1, ExceptingFunction<P1, R, Throwable> function) {
+        try {
+            if (p1 == null) {
+                return null;
+            }
+            return function.apply(p1);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    public static <P1, R> Op1Manipulate<P1, R> opNonNullLater(ExceptingFunction<P1, R, Throwable> function){
+        return new Op1Manipulate<>((p1) -> {
+            if (p1 == null) {
+                return null;
+            }
+            return function.apply(p1);
+        });
+    }
+
     public static <P1, P2, R> R op2(P1 p1, P2 p2, ExceptingBiFunction<P1, P2, R, Throwable> function) {
         try {
             return function.apply(p1, p2);
