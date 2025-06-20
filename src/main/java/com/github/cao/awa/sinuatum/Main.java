@@ -12,6 +12,9 @@ public class Main {
             throw new IOException("Test exception");
         });
         System.out.println("awa");
+
+        run.catching(IOException.class, Throwable::printStackTrace);
+
         run.run();
     }
 }
