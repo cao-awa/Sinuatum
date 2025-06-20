@@ -1,11 +1,9 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
-import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingBiFunction;
-import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingFunction;
+import com.github.cao.awa.sinuatum.function.exception.function.ExceptingBiFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class Op2Manipulate<P1, P2, R> extends Manipulate<Op2Manipulate<P1, P2, R>> {
     private final ExceptingBiFunction<P1, P2, R, Throwable> function;

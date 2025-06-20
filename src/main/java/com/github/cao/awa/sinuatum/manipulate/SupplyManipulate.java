@@ -1,7 +1,6 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
-import com.github.cao.awa.sinuatum.function.ecception.runnable.ExceptingRunnable;
-import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier;
+import com.github.cao.awa.sinuatum.function.exception.supplier.ExceptingSupplier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;

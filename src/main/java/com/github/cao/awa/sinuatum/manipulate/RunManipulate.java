@@ -1,6 +1,6 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
-import com.github.cao.awa.sinuatum.function.ecception.runnable.ExceptingRunnable;
+import com.github.cao.awa.sinuatum.function.exception.runnable.ExceptingRunnable;
 
 public class RunManipulate extends Manipulate<RunManipulate> {
     private final ExceptingRunnable<Throwable> runnable;

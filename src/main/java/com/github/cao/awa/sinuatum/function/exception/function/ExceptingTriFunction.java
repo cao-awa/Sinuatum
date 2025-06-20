@@ -1,7 +1,6 @@
-package com.github.cao.awa.sinuatum.function.ecception.function;
+package com.github.cao.awa.sinuatum.function.exception.function;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 @FunctionalInterface
 public interface ExceptingTriFunction<A, B, C, R, EX extends Throwable> {

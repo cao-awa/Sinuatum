@@ -1,11 +1,9 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
-import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingFunction;
-import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier;
+import com.github.cao.awa.sinuatum.function.exception.function.ExceptingFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class Op1Manipulate<P1, R> extends Manipulate<Op1Manipulate<P1, R>> {
     private final ExceptingFunction<P1, R, Throwable> function;

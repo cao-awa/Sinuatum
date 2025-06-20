@@ -1,4 +1,4 @@
-package com.github.cao.awa.sinuatum.function.ecception.runnable;
+package com.github.cao.awa.sinuatum.function.exception.runnable;
 
 @FunctionalInterface
 public interface ExceptingRunnable<EX extends Throwable> {

@@ -1,19 +1,17 @@
-package com.github.cao.awa.sinuatum.function.ecception.consumer;
+package com.github.cao.awa.sinuatum.function.exception.consumer;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface ExceptingQuadConsumer<A, B, C, D, EX extends Throwable> extends Serializable {
+public interface ExceptingBiConsumer<A, B, EX extends Throwable> extends Serializable {
     /**
      * Performs this operation on the given arguments.
      *
      * @param a the first input argument
      * @param b the second input argument
-     * @param c the third input argument
-     * @param d the quad input argument
      */
-    void accept(A a, B b, C c, D d) throws EX;
+    void accept(A a, B b) throws EX;
 
     /**
      * Returns a composed {@code Consumer} that performs, in sequence, this
@@ -28,11 +26,11 @@ public interface ExceptingQuadConsumer<A, B, C, D, EX extends Throwable> extends
      * operation followed by the {@code after} operation
      *
      */
-    default ExceptingQuadConsumer<A, B, C, D, EX> andThen(ExceptingQuadConsumer<A, B, C, D, EX> after) {
+    default ExceptingBiConsumer<A, B, EX> andThen(ExceptingBiConsumer<A, B, EX> after) {
         Objects.requireNonNull(after);
-        return (a, b, c, d) -> {
-            accept(a, b, c, d);
-            after.accept(a, b, c, d);
+        return (a, b) -> {
+            accept(a, b);
+            after.accept(a, b);
         };
     }
 }

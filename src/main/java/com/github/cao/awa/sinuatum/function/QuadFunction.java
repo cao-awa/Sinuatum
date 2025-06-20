@@ -1,19 +1,20 @@
-package com.github.cao.awa.sinuatum.function.function;
+package com.github.cao.awa.sinuatum.function;
 
 import java.util.Objects;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface TriFunction<A, B, C, R> {
+public interface QuadFunction<A, B, C, D, R> {
     /**
      * Applies this function to the given arguments.
      *
      * @param a the first function argument
      * @param b the second function argument
      * @param c the third function argument
+     * @param d the quad function argument
      * @return the function result
      */
-    R apply(A a, B b, C c);
+    R apply(A a, B b, C c, D d);
 
     /**
      * Returns a composed function that first applies this function to
@@ -28,8 +29,8 @@ public interface TriFunction<A, B, C, R> {
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <V> TriFunction<A, B, C, V> andThen(Function<? super R, ? extends V> after) {
+    default <V> QuadFunction<A, B, C, D, V> andThen(Function<? super R, ? extends V> after) {
         Objects.requireNonNull(after);
-        return (a, b, c) -> after.apply(apply(a, b, c));
+        return (a, b, c, d) -> after.apply(apply(a, b, c, d));
     }
 }

@@ -1,10 +1,6 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
-import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
-import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
+import com.github.cao.awa.sinuatum.function.exception.consumer.ExceptingConsumer;
 
 public class MakeManipulate<I> extends Manipulate<MakeManipulate<I>> {
     private final ExceptingConsumer<I, Throwable> consumer;

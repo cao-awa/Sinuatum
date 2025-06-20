@@ -1,15 +1,14 @@
 package com.github.cao.awa.sinuatum.manipulate;
 
-import com.github.cao.awa.sinuatum.function.ecception.consumer.ExceptingConsumer;
-import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingBiFunction;
-import com.github.cao.awa.sinuatum.function.ecception.function.ExceptingFunction;
-import com.github.cao.awa.sinuatum.function.ecception.runnable.ExceptingRunnable;
-import com.github.cao.awa.sinuatum.function.ecception.supplier.ExceptingSupplier;
+import com.github.cao.awa.sinuatum.function.exception.consumer.ExceptingConsumer;
+import com.github.cao.awa.sinuatum.function.exception.function.ExceptingBiFunction;
+import com.github.cao.awa.sinuatum.function.exception.function.ExceptingFunction;
+import com.github.cao.awa.sinuatum.function.exception.runnable.ExceptingRunnable;
+import com.github.cao.awa.sinuatum.function.exception.supplier.ExceptingSupplier;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class Manipulate<M> {
     private final Map<Class<? extends Throwable>, Consumer<? extends Throwable>> exceptionHandlers = new HashMap<>();

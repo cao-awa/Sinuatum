@@ -1,4 +1,4 @@
-package com.github.cao.awa.sinuatum.function.ecception.function;
+package com.github.cao.awa.sinuatum.function.exception.function;
 
 import java.util.Objects;
 

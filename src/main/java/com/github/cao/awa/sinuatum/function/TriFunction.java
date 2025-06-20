@@ -1,19 +1,19 @@
-package com.github.cao.awa.sinuatum.function.ecception.function;
+package com.github.cao.awa.sinuatum.function;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 @FunctionalInterface
-public interface ExceptingQuadFunction<A, B, C, D, R, EX extends Throwable> {
+public interface TriFunction<A, B, C, R> {
     /**
      * Applies this function to the given arguments.
      *
      * @param a the first function argument
      * @param b the second function argument
      * @param c the third function argument
-     * @param d the quad function argument
      * @return the function result
      */
-    R apply(A a, B b, C c, D d) throws EX;
+    R apply(A a, B b, C c);
 
     /**
      * Returns a composed function that first applies this function to
@@ -28,8 +28,8 @@ public interface ExceptingQuadFunction<A, B, C, D, R, EX extends Throwable> {
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <V> ExceptingQuadFunction<A, B, C, D, V, EX> andThen(ExceptingFunction<? super R, ? extends V, EX> after) {
+    default <V> TriFunction<A, B, C, V> andThen(Function<? super R, ? extends V> after) {
         Objects.requireNonNull(after);
-        return (a, b, c, d) -> after.apply(apply(a, b, c, d));
+        return (a, b, c) -> after.apply(apply(a, b, c));
     }
 }

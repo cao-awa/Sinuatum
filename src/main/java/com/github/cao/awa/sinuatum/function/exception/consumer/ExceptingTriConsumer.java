@@ -1,17 +1,18 @@
-package com.github.cao.awa.sinuatum.function.ecception.consumer;
+package com.github.cao.awa.sinuatum.function.exception.consumer;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface ExceptingBiConsumer<A, B, EX extends Throwable> extends Serializable {
+public interface ExceptingTriConsumer<A, B, C, EX extends Throwable> extends Serializable {
     /**
      * Performs this operation on the given arguments.
      *
      * @param a the first input argument
      * @param b the second input argument
+     * @param c the third input argument
      */
-    void accept(A a, B b) throws EX;
+    void accept(A a, B b, C c) throws EX;
 
     /**
      * Returns a composed {@code Consumer} that performs, in sequence, this
@@ -26,11 +27,11 @@ public interface ExceptingBiConsumer<A, B, EX extends Throwable> extends Seriali
      * operation followed by the {@code after} operation
      *
      */
-    default ExceptingBiConsumer<A, B, EX> andThen(ExceptingBiConsumer<A, B, EX> after) {
+    default ExceptingTriConsumer<A, B, C, EX> andThen(ExceptingTriConsumer<A, B, C, EX> after) {
         Objects.requireNonNull(after);
-        return (a, b) -> {
-            accept(a, b);
-            after.accept(a, b);
+        return (a, b, c) -> {
+            accept(a, b, c);
+            after.accept(a, b, c);
         };
     }
 }
