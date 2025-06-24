@@ -1,14 +1,11 @@
 package com.github.cao.awa.sinuatum.util.digger;
 
-import com.github.cao.awa.sinuatum.annotations.Stable;
-
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Stable
 public class MessageDigger {
     private static final int BUF_SIZE = 16384;
 

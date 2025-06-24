@@ -3,6 +3,9 @@ plugins {
     id 'maven-publish'
 }
 
+group = "$project.group_id"
+version = "$project.name-$project.version_name"
+
 publishing {
     repositories {
         maven {
@@ -16,8 +19,8 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            groupId = project.group_id
-            artifactId = project.artifact_id
+            groupId = "$project.group_id"
+            artifactId = "$project.name-$project.version_name"
             version = project.version_name
 
             from components.java
@@ -29,6 +32,12 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    create("shadow")
+    implementation.extendsFrom(shadow)
+}
+
+
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -39,3 +48,31 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+java {
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+
+    }
+
+    with copySpec({
+        from(configurations.shadow.collect {
+            it.isDirectory() ? it : zipTree(it)
+        })
+
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    })
+
+    manifest {
+        attributes(
+                'Multi-Release': 'true',
+        )
+    }
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17

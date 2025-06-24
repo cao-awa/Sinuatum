@@ -1,11 +1,8 @@
 package com.github.cao.awa.sinuatum.resource.loader;
 
-import com.github.cao.awa.sinuatum.annotations.Stable;
-
 import java.io.File;
 import java.io.InputStream;
 
-@Stable
 public class ResourceLoader {
     public static InputStream get(String resource) {
         return ResourceLoader.class.getClassLoader()
