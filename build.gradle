@@ -20,8 +20,8 @@ publishing {
     publications {
         gpr(MavenPublication) {
             groupId = "$project.group_id" as Publication
-            artifactId = "$project.name-$project.version_name" as Publication
-            version = project.version_name
+            artifactId = "$project.name" as Publication
+            version = "$project.version_name" as Publication
 
             from components.java
         }
