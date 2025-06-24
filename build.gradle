@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "$project.group_id"
-version = "$project.name-$project.version_name"
+version = "$project.version_name"
 
 publishing {
     repositories {
@@ -19,8 +19,8 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            groupId = "$project.group_id"
-            artifactId = "$project.name-$project.version_name"
+            groupId = "$project.group_id" as Publication
+            artifactId = "$project.name-$project.version_name" as Publication
             version = project.version_name
 
             from components.java
@@ -36,7 +36,6 @@ configurations {
     create("shadow")
     implementation.extendsFrom(shadow)
 }
-
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
